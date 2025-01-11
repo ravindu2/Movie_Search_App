@@ -10,17 +10,19 @@ void main() {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    
     return ChangeNotifierProvider(
       create: (context) => MovieProvider(),
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        title: 'Movie Search App',
-        theme: ThemeData(
-          primarySwatch: Colors.blue,
-          useMaterial3: true,
+      child: Padding(
+        padding: const EdgeInsets.all(4),
+        child: MaterialApp(
+          title: 'Movie Search App',
+          theme: ThemeData(
+            primarySwatch: Colors.blue,
+            visualDensity: VisualDensity.adaptivePlatformDensity,
+          ),
+          debugShowCheckedModeBanner: false, 
+          home: HomeScreen(),
         ),
-        home: HomeScreen(),
       ),
     );
   }
