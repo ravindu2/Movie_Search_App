@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import '../models/movie.dart';
+import '../providers/movie_provider.dart';
+import 'package:provider/provider.dart';
 
 class MovieDetailsScreen extends StatelessWidget {
   final Movie movie;
@@ -14,6 +16,24 @@ class MovieDetailsScreen extends StatelessWidget {
           SliverAppBar(
             expandedHeight: 200,
             pinned: true,
+            actions: [
+              Consumer<MovieProvider>(
+                builder: (context, movieProvider, child) {
+                  final isFavorite = movieProvider.favorites
+                      .any((fav) => fav.id == movie.id);
+
+                  return IconButton(
+                    icon: Icon(
+                      isFavorite ? Icons.favorite : Icons.favorite_border,
+                      color: Colors.white,
+                    ),
+                    onPressed: () async {
+                      await movieProvider.toggleFavorite(movie);
+                    },
+                  );
+                },
+              ),
+            ],
             flexibleSpace: FlexibleSpaceBar(
               title: Text(movie.title),
               background: Image.network(

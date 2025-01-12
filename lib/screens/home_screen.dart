@@ -15,42 +15,53 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    Future.microtask(
-      () => context.read<MovieProvider>().loadNowPlayingMovies(),
-    );
+    Future.microtask(() {
+      final provider = context.read<MovieProvider>();
+      provider.loadNowPlayingMovies();
+      provider.loadFavorites();
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-  title: Text('TMDB Movies'),
-  actions: [
-    IconButton(
-      icon: Icon(Icons.filter_list),
-      onPressed: () async {
-        final provider = context.read<MovieProvider>();
-        final result = await showDialog<FilterOptions>(
-          context: context,
-          builder: (context) => FilterDialog(
-            initialFilters: provider.filterOptions,
+        title: Text('TMDB Movies'),
+        actions: [
+          IconButton(
+            icon: Icon(
+              context.watch<MovieProvider>().showOnlyFavorites
+                  ? Icons.favorite
+                  : Icons.favorite_border,
+            ),
+            onPressed: () {
+              context.read<MovieProvider>().toggleShowOnlyFavorites();
+            },
           ),
-        );
-        
-        if (result != null) {
-          provider.setFilters(result);
-        }
-      },
-    ),
-    if (context.watch<MovieProvider>().filterOptions != null)
-      IconButton(
-        icon: Icon(Icons.clear),
-        onPressed: () {
-          context.read<MovieProvider>().clearFilters();
-        },
+          IconButton(
+            icon: Icon(Icons.filter_list),
+            onPressed: () async {
+              final provider = context.read<MovieProvider>();
+              final result = await showDialog<FilterOptions>(
+                context: context,
+                builder: (context) => FilterDialog(
+                  initialFilters: provider.filterOptions,
+                ),
+              );
+              if (result != null) {
+                provider.setFilters(result);
+              }
+            },
+          ),
+          if (context.watch<MovieProvider>().filterOptions != null)
+            IconButton(
+              icon: Icon(Icons.clear),
+              onPressed: () {
+                context.read<MovieProvider>().clearFilters();
+              },
+            ),
+        ],
       ),
-  ],
-),
       body: Column(
         children: [
           Padding(
@@ -95,9 +106,21 @@ class MovieGrid extends StatelessWidget {
           return Center(child: Text(provider.error));
         }
 
-        final movies = provider.searchResults.isNotEmpty 
-            ? provider.searchResults 
-            : provider.movies;
+        final movies = provider.showOnlyFavorites
+            ? provider.favorites
+            : provider.searchResults.isNotEmpty
+                ? provider.searchResults
+                : provider.movies;
+
+        if (movies.isEmpty) {
+          return Center(
+            child: Text(
+              provider.showOnlyFavorites
+                  ? 'No favorite movies found.'
+                  : 'No movies found.',
+            ),
+          );
+        }
 
         return GridView.builder(
           padding: EdgeInsets.all(8),
