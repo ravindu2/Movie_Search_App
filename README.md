@@ -1,16 +1,17 @@
-# movie_search_app
+# Movie Search App - Flutter
 
-A new Flutter project.
+## Description
+The Movie Search App allows users to search for movies, view movie details, and add movies to their favorites. The app integrates with the Movie Database (TMDb) API to fetch movie data. It features a clean UI/UX design and is fully responsive across devices.
 
-## Getting Started
+## Features
+- **Search for Movies**: Users can search movies by title.
+- **Movie Results**: Displays a list of movie posters, titles, and release years.
+- **Movie Details**: Detailed information on each movie (poster, title, release year, overview, rating).
+- **Favorites**: Allows users to save their favorite movies.
+- **Pagination**: Movie search results are paginated for better performance.rae
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Setup Instructions
+1. **Clone the repository**:  
+   Clone this repository to your local machine using the following command:
+   ```bash
+   git clone https://github.com/your-username/movie-search-app.git
