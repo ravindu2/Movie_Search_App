@@ -27,6 +27,7 @@ The Movie Search App allows users to search for movies, view movie details, and 
         -Create a .env file in the root of the project and add the API key:
     ```bash
     API_KEY=your_tmdb_api_key
+    BASE_URL=https://api.themoviedb.org/3/movie/top_rated
 
 4. **Run the app**:
     Run the app on an emulator or a physical device using the following command:
@@ -39,4 +40,9 @@ The Movie Search App allows users to search for movies, view movie details, and 
     -http: ^1.2.2 - For making HTTP requests to the TMDb API.
     -provider: ^6.1.2 - For state management.
     -animated_text_kit: ^4.2.2 - For adding animated text to enhance user experience
+
+## APK for Testing
+You can download the APK file for testing from the following link:  
+[Download APK](https://drive.google.com/file/d/19f38u2KXEvhXJp3Jn-XRzcLpQDUDKXpC/view?usp=drive_link)
+
 

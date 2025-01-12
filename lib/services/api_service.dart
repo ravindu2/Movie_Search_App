@@ -4,7 +4,7 @@ import '../models/movie.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class ApiService {
-  static const String baseUrl = 'https://api.themoviedb.org/3/movie/top_rated';
+  String baseUrl = dotenv.env['BASE_URL'] ??'https://api.themoviedb.org/3/movie/top_rated';
   String apiKey = dotenv.env['API_KEY'] ?? 'No API Key';
 
   Future<List<Movie>> getNowPlayingMovies() async {
