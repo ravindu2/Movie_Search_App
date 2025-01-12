@@ -33,9 +33,10 @@ The Movie Search App allows users to search for movies, view movie details, and 
     ```bash
     flutter run
 ## Libraries/Plugins Used
--hive: ^2.2.3 - For storing favorite movies locally in a lightweight NoSQL database.
--hive_flutter: ^1.1.0 - For Flutter integration with Hive database.
--http: ^1.2.2 - For making HTTP requests to the TMDb API.
--provider: ^6.1.2 - For state management.
--animated_text_kit: ^4.2.2 - For adding animated text to enhance user experience
+
+    -hive: ^2.2.3 - For storing favorite movies locally in a lightweight NoSQL database.
+    -hive_flutter: ^1.1.0 - For Flutter integration with Hive database.
+    -http: ^1.2.2 - For making HTTP requests to the TMDb API.
+    -provider: ^6.1.2 - For state management.
+    -animated_text_kit: ^4.2.2 - For adding animated text to enhance user experience
 
