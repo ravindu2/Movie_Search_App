@@ -15,3 +15,6 @@ The Movie Search App allows users to search for movies, view movie details, and 
    Clone this repository to your local machine using the following command:
    ```bash
    git clone https://github.com/your-username/movie-search-app.git
+
+2. **Install dependencies**:
+    Navigate to the project folder and run:
