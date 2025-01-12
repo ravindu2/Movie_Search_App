@@ -3,6 +3,8 @@ import 'package:provider/provider.dart';
 import '../providers/movie_provider.dart';
 import 'movie_details_screen.dart';
 import '../models/movie.dart';
+import '../models/filter_options.dart';
+import '../widgets/filter_dialog.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -22,8 +24,33 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('TMDB Movies'),
+  title: Text('TMDB Movies'),
+  actions: [
+    IconButton(
+      icon: Icon(Icons.filter_list),
+      onPressed: () async {
+        final provider = context.read<MovieProvider>();
+        final result = await showDialog<FilterOptions>(
+          context: context,
+          builder: (context) => FilterDialog(
+            initialFilters: provider.filterOptions,
+          ),
+        );
+        
+        if (result != null) {
+          provider.setFilters(result);
+        }
+      },
+    ),
+    if (context.watch<MovieProvider>().filterOptions != null)
+      IconButton(
+        icon: Icon(Icons.clear),
+        onPressed: () {
+          context.read<MovieProvider>().clearFilters();
+        },
       ),
+  ],
+),
       body: Column(
         children: [
           Padding(
