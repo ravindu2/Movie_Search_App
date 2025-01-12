@@ -4,9 +4,11 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'models/movie.dart';
 import 'providers/movie_provider.dart';
 import 'screens/home_screen.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 void main() async {
   
+  await dotenv.load();
   await Hive.initFlutter();
   Hive.registerAdapter(MovieAdapter());
   await Hive.openBox<Movie>('favorites');
