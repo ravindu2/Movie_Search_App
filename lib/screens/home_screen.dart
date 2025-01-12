@@ -28,7 +28,19 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: AppBar(
         backgroundColor:
             Colors.grey[500],
-        title: Text('TMDB Movies'),
+        title: Text('TMDB Movies', style:TextStyle(
+      fontSize: 24,
+      fontWeight: FontWeight.bold,
+      letterSpacing: 1.2,
+      color: Colors.white,
+      shadows: [
+        Shadow(
+          offset: Offset(1.0, 1.0),
+          blurRadius: 3.0,
+          color: Colors.black.withOpacity(0.3),
+        ),
+      ],
+    ),),
         actions: [
           IconButton(
             icon: Icon(
