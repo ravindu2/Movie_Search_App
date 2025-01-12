@@ -24,7 +24,7 @@ class MovieProvider extends ChangeNotifier {
   String get error => _error;
   FilterOptions? get filterOptions => _filterOptions;
 
-  // Filter and favorite-related logic
+  
   List<Movie> _getFilteredMovies(List<Movie> movieList) {
     var filteredList = movieList;
 
@@ -68,7 +68,7 @@ class MovieProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  // Favorite-related methods
+  
   Future<void> loadFavorites() async {
     _favorites = await _favoritesService.getFavorites();
     notifyListeners();
@@ -83,7 +83,7 @@ class MovieProvider extends ChangeNotifier {
     return await _favoritesService.isFavorite(movie.id);
   }
 
-  // Movie loading methods
+  
   Future<void> loadNowPlayingMovies() async {
     try {
       _isLoading = true;

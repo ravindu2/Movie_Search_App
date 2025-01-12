@@ -26,6 +26,8 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor:
+            Colors.grey[500],
         title: Text('TMDB Movies'),
         actions: [
           IconButton(
@@ -84,7 +86,9 @@ class SearchBar extends StatelessWidget {
       decoration: InputDecoration(
         hintText: 'Search movies...',
         prefixIcon: Icon(Icons.search),
-        border: OutlineInputBorder(),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(25),
+        ),
       ),
       onChanged: (value) {
         context.read<MovieProvider>().searchMovies(value);
