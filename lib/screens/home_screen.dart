@@ -1,15 +1,28 @@
 import 'package:flutter/material.dart';
-import '../models/movie.dart';
 import 'package:provider/provider.dart';
 import '../providers/movie_provider.dart';
 import 'movie_details_screen.dart';
+import '../models/movie.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
+  @override
+  _HomeScreenState createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  @override
+  void initState() {
+    super.initState();
+    Future.microtask(
+      () => context.read<MovieProvider>().loadNowPlayingMovies(),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Movie Search'),
+        title: Text('TMDB Movies'),
       ),
       body: Column(
         children: [
@@ -17,9 +30,8 @@ class HomeScreen extends StatelessWidget {
             padding: const EdgeInsets.all(8.0),
             child: SearchBar(),
           ),
-          FilterBar(),
           Expanded(
-            child: MovieList(),
+            child: MovieGrid(),
           ),
         ],
       ),
@@ -34,92 +46,43 @@ class SearchBar extends StatelessWidget {
       decoration: InputDecoration(
         hintText: 'Search movies...',
         prefixIcon: Icon(Icons.search),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12.0),  
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12.0),  
-          borderSide: BorderSide(color: Colors.grey),  
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12.0), 
-          borderSide: BorderSide(color: Colors.blue),  
-        ),
+        border: OutlineInputBorder(),
       ),
       onChanged: (value) {
-        Provider.of<MovieProvider>(context, listen: false).searchMovies(value);
+        context.read<MovieProvider>().searchMovies(value);
       },
     );
   }
 }
 
-
-class FilterBar extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8.0),
-      child: Row(
-        children: [
-          Expanded(
-            child: DropdownButton<String>(
-              hint: Text('Filter by Genre'),
-              isExpanded: true,
-              items: ['Action', 'Sci-Fi', 'Drama', 'Comedy']
-                  .map((genre) => DropdownMenuItem(
-                        value: genre,
-                        child: Text(genre),
-                      ))
-                  .toList(),
-              onChanged: (value) {
-                if (value != null) {
-                  Provider.of<MovieProvider>(context, listen: false)
-                      .filterByGenre(value);
-                }
-              },
-            ),
-          ),
-          SizedBox(width: 8),
-          Expanded(
-            child: DropdownButton<String>(
-              hint: Text('Filter by Year'),
-              isExpanded: true,
-              items: ['2008', '2009', '2010', '2011']
-                  .map((year) => DropdownMenuItem(
-                        value: year,
-                        child: Text(year),
-                      ))
-                  .toList(),
-              onChanged: (value) {
-                if (value != null) {
-                  Provider.of<MovieProvider>(context, listen: false)
-                      .filterByYear(value);
-                }
-              },
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class MovieList extends StatelessWidget {
+class MovieGrid extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Consumer<MovieProvider>(
-      builder: (context, movieProvider, child) {
+      builder: (context, provider, child) {
+        if (provider.isLoading) {
+          return Center(child: CircularProgressIndicator());
+        }
+
+        if (provider.error.isNotEmpty) {
+          return Center(child: Text(provider.error));
+        }
+
+        final movies = provider.searchResults.isNotEmpty 
+            ? provider.searchResults 
+            : provider.movies;
+
         return GridView.builder(
+          padding: EdgeInsets.all(8),
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2, // 2 cards per row
-            crossAxisSpacing: 8.0, // Space between columns
-            mainAxisSpacing: 8.0, // Space between rows
-            childAspectRatio: 0.7, // Aspect ratio of each card (adjust as needed)
+            crossAxisCount: 2,
+            childAspectRatio: 0.7,
+            crossAxisSpacing: 8,
+            mainAxisSpacing: 8,
           ),
-          itemCount: movieProvider.filteredMovies.length,
+          itemCount: movies.length,
           itemBuilder: (context, index) {
-            final movie = movieProvider.filteredMovies[index];
-            return MovieCard(movie: movie);
+            return MovieCard(movie: movies[index]);
           },
         );
       },
@@ -130,13 +93,12 @@ class MovieList extends StatelessWidget {
 class MovieCard extends StatelessWidget {
   final Movie movie;
 
-  const MovieCard({super.key, required this.movie});
+  const MovieCard({required this.movie});
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        // Navigate to MovieDetailsScreen when the card is tapped
         Navigator.push(
           context,
           MaterialPageRoute(
@@ -145,44 +107,42 @@ class MovieCard extends StatelessWidget {
         );
       },
       child: Card(
-        margin: EdgeInsets.all(8),
+        clipBehavior: Clip.antiAlias,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Movie poster
-            Image.network(
-              movie.posterUrl,
-              width: double.infinity,
-              height: 150,
-              fit: BoxFit.cover,
-              errorBuilder: (context, error, stackTrace) =>
-                  Icon(Icons.movie, size: 50),
-            ),
-            SizedBox(height: 8),
-            // Movie title and info
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8.0),
-              child: Text(
-                movie.title,
-                style: TextStyle(fontWeight: FontWeight.bold),
-                overflow: TextOverflow.ellipsis,
+            Expanded(
+              child: Image.network(
+                movie.fullPosterPath,
+                fit: BoxFit.cover,
+                width: double.infinity,
+                errorBuilder: (context, error, stackTrace) =>
+                    Center(child: Icon(Icons.movie)),
               ),
             ),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8.0),
-              child: Text(
-                '${movie.releaseYear} • ${movie.genre}',
-                style: TextStyle(color: Colors.grey),
-                overflow: TextOverflow.ellipsis,
-              ),
-            ),
-            SizedBox(height: 8),
-            // Movie rating
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8.0),
-              child: Text(
-                '★ ${movie.rating}',
-                style: TextStyle(color: Colors.amber),
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    movie.title,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: Theme.of(context).textTheme.titleSmall,
+                  ),
+                  SizedBox(height: 4),
+                  Row(
+                    children: [
+                      Icon(Icons.star, color: Colors.amber, size: 16),
+                      SizedBox(width: 4),
+                      Text(
+                        movie.voteAverage.toStringAsFixed(1),
+                        style: Theme.of(context).textTheme.bodySmall,
+                      ),
+                    ],
+                  ),
+                ],
               ),
             ),
           ],
@@ -191,4 +151,3 @@ class MovieCard extends StatelessWidget {
     );
   }
 }
-

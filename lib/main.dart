@@ -12,17 +12,13 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (context) => MovieProvider(),
-      child: Padding(
-        padding: const EdgeInsets.all(4),
-        child: MaterialApp(
-          title: 'Movie Search App',
-          theme: ThemeData(
-            primarySwatch: Colors.blue,
-            visualDensity: VisualDensity.adaptivePlatformDensity,
-          ),
-          debugShowCheckedModeBanner: false, 
-          home: HomeScreen(),
+      child: MaterialApp(
+        title: 'TMDB Movies',
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+          visualDensity: VisualDensity.adaptivePlatformDensity,
         ),
+        home: HomeScreen(),
       ),
     );
   }

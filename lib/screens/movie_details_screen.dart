@@ -9,69 +9,54 @@ class MovieDetailsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(movie.title),
-      ),
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(12.0),  
-                child: Image.network(
-                  movie.posterUrl,
-                  fit: BoxFit.contain,  
-                  height: 300, 
-                  width: double.infinity,  
-                  errorBuilder: (context, error, stackTrace) => Icon(Icons.movie, size: 200),
+      body: CustomScrollView(
+        slivers: [
+          SliverAppBar(
+            expandedHeight: 200,
+            pinned: true,
+            flexibleSpace: FlexibleSpaceBar(
+              title: Text(movie.title),
+              background: Image.network(
+                movie.fullPosterPath,
+                fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) =>
+                    Center(child: Icon(Icons.movie)),
+              ),
+            ),
+          ),
+          SliverPadding(
+            padding: EdgeInsets.all(16),
+            sliver: SliverList(
+              delegate: SliverChildListDelegate([
+                Row(
+                  children: [
+                    Icon(Icons.star, color: Colors.amber),
+                    SizedBox(width: 4),
+                    Text(
+                      movie.voteAverage.toStringAsFixed(1),
+                      style: Theme.of(context).textTheme.titleMedium,
+                    ),
+                    SizedBox(width: 16),
+                    Text(
+                      'Release Date: ${movie.releaseDate}',
+                      style: Theme.of(context).textTheme.titleMedium,
+                    ),
+                  ],
                 ),
-              ),
+                SizedBox(height: 16),
+                Text(
+                  'Overview',
+                  style: Theme.of(context).textTheme.titleLarge,
+                ),
+                SizedBox(height: 8),
+                Text(
+                  movie.overview,
+                  style: Theme.of(context).textTheme.bodyLarge,
+                ),
+              ]),
             ),
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Movie Title
-                  Text(
-                    movie.title,
-                    style: Theme.of(context).textTheme.headlineSmall,
-                  ),
-                  SizedBox(height: 8),
-                  Row(
-                    children: [
-                      // Movie Release Year and Genre
-                      Text(
-                        '${movie.releaseYear} • ${movie.genre}',
-                        style: Theme.of(context).textTheme.bodyLarge,
-                      ),
-                      Spacer(),
-                      // Rating Icon and Text
-                      Icon(Icons.star, color: Colors.amber),
-                      Text(
-                        ' ${movie.rating}',
-                        style: Theme.of(context).textTheme.bodyLarge,
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 16),
-                  // Overview section
-                  Text(
-                    'Overview',
-                    style: Theme.of(context).textTheme.titleLarge,
-                  ),
-                  SizedBox(height: 8),
-                  Text(
-                    movie.overview,
-                    style: Theme.of(context).textTheme.bodyMedium,
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
