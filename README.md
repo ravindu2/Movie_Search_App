@@ -1,7 +1,7 @@
 # Movie Search App - Flutter
 
 ## Description
-The Movie Search App allows users to search for movies, view movie details, and add movies to their favorites. The app integrates with the Movie Database (TMDb) API to fetch movie data. It features a clean UI/UX design and is fully responsive across devices.
+The Movie Search App allows users to search for movies, view movie details, and add movies to their favorites. The app integrates with the Movie Database (TMDb) API to fetch movie data. It features a clean UI/UX design.
 
 ## Features
 - **Search for Movies**: Users can search movies by title.
